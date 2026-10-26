@@ -154,15 +154,16 @@ reviews for ASIN B0FQFB8FMG, measured 2026-10-12, reference only).
 - `review_mining_report` fetches all_stars + critical, so its review
   counts are per-fetch, not a single de-duplicated sample.
 
-## Notes for a future mcprush submission (not submitted)
+## Publication status (2026-10-26)
 
 mcprush accepts MCP servers or agent skills only (verified 2026-10-26:
 its server wizard requires a repo / npm / PyPI / container / hosted MCP
-endpoint and passes `initialize` + `tools/list` verification). For this
-project that means:
+endpoint and passes `initialize` + `tools/list` verification).
 
-- Submission source would be the npm package (after publish) or the Git
-  repo — both currently **not done** (local only, by design).
+- GitHub repo: live at https://github.com/Pangolin-spg/pangolinfo-review-mining-mcp
+- npm package: `pangolinfo-review-mining-mcp` 0.1.0, published 2026-10-26
+- mcprush listing: submitted 2026-10-26, in review (expected URL:
+  https://mcprush.com/pangolin-spg/pangolinfo-review-mining-mcp)
 - Server-card info needed: name, one-line description, and a paragraph
   of at least 120 characters on what it does and who it is for.
 - Pricing: free plan (or priced plans with name, monthly price, call
@@ -182,12 +183,11 @@ project that means:
    the Review API's REST URL. The bridge design avoids needing it, but
    a direct-REST mode should not be added until the URL is confirmed
    from docs or a measured call.
-2. **Live end-to-end test (pending):** blocked on the Pangolinfo API
-   key reconnect (stored key expired 2026-10-24). After reconnect:
-   run `get_product_reviews` for a known ASIN, verify `pointCost`,
-   and re-check the 5 vs 10 credits/page discrepancy.
-3. **Billing discrepancy (open):** docs + measured = 5/page; upstream
-   tool description = 10/page. Resolve by observing a live
-   `pointCost` after reconnect.
-4. **Publish (not done, needs approval):** GitHub repo + npm publish +
-   mcprush submission are all future steps, none taken here.
+2. **Live end-to-end test (done 2026-10-26):** verified with a temporary
+   7-day key: `get_product_reviews` + `mine_complaints` on ASIN
+   B0FQFB8FMG, 5 credits/page each, 4,446 total reviews / 1,457
+   critical at time of test.
+3. **Billing discrepancy (resolved 2026-10-26):** live `pointCost` =
+   5/page; the upstream tool description's 10/page is stale.
+4. **Publish (done 2026-10-26):** GitHub repo live, npm 0.1.0
+   published, mcprush listing submitted (in review).
