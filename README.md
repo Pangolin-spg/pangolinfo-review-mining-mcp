@@ -1,5 +1,7 @@
 # Pangolinfo Review Mining MCP
 
+[![Pangolinfo Review Mining MCP server](https://mcprush.com/badge/pangolinfo-review-mining-mcp/card.svg)](https://mcprush.com/to/pangolinfo-review-mining-mcp?ref=badge)
+
 A differentiated, review-mining-only MCP server for Amazon product reviews.
 It mines what buyers complain about, how sentiment trends, and which
 complaint themes dominate — it does **not** duplicate the general
