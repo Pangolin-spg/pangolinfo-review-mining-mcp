@@ -161,7 +161,7 @@ its server wizard requires a repo / npm / PyPI / container / hosted MCP
 endpoint and passes `initialize` + `tools/list` verification).
 
 - GitHub repo: live at https://github.com/Pangolin-spg/pangolinfo-review-mining-mcp
-- npm package: `pangolinfo-review-mining-mcp` 0.1.0, published 2026-10-26
+- npm package: `pangolinfo-review-mining-mcp` 0.1.1, published 2026-10-26 (0.1.0 was the first publish the same day; 0.1.1 adds the `mcpName` field required by the MCP Registry)
 - mcprush listing: submitted 2026-10-26, in review (expected URL:
   https://mcprush.com/pangolin-spg/pangolinfo-review-mining-mcp)
 - Server-card info needed: name, one-line description, and a paragraph
