@@ -55,7 +55,7 @@ function buildClient(): UpstreamReviewsClient {
 async function main(): Promise<void> {
   const client = buildClient();
   const server = new Server(
-    { name: "pangolinfo-review-mining-mcp", version: "0.1.0" },
+    { name: "pangolinfo-review-mining-mcp", version: "0.1.1" },
     { capabilities: { tools: {} } },
   );
 

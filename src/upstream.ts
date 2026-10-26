@@ -111,7 +111,7 @@ export class McpUpstreamClient implements UpstreamReviewsClient {
     if (!this.connecting) {
       this.connecting = (async () => {
         const client = new Client(
-          { name: "pangolinfo-review-mining-mcp", version: "0.1.0" },
+          { name: "pangolinfo-review-mining-mcp", version: "0.1.1" },
           { capabilities: {} },
         );
         const transport = new StreamableHTTPClientTransport(
