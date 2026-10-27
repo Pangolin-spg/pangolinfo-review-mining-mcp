@@ -60,6 +60,10 @@ export PANGOLINFO_API_KEY="your-key-here"   # never commit a real key
 node dist/src/index.js
 ```
 
+Without a key the server still starts and answers initialize and
+tools/list; live tool calls fail with a clear message until
+PANGOLINFO_API_KEY is set.
+
 Run (mock mode, no network, no key — for tests and demos):
 
 ```bash

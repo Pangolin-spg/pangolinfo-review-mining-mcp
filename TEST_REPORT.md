@@ -107,3 +107,27 @@ Result: **17 tests, 17 passed, 0 failed.**
 - No API key, token, or credential stored in source, fixtures, or docs
   (key is read only from `PANGOLINFO_API_KEY` at runtime).
 - No invented endpoint, parameter, response field, or review datum.
+
+## v0.1.2 lazy-key startup (2026-10-27)
+
+Cause: MCPVault verification failed at stage initialize with
+process_exited_code_1, because the server threw at startup when
+PANGOLINFO_API_KEY was not set (reproduced locally: Fatal message,
+process exits before answering initialize).
+
+Change: the server no longer requires the key to start. Startup builds
+a MissingKeyUpstreamClient when no key is set (mock mode unchanged);
+initialize and tools/list succeed without a key, and only live tool
+calls fail, cleanly, with a clear "PANGOLINFO_API_KEY is not set"
+message (returned as an isError tool result, not a crash). Server
+version bumped 0.1.1 → 0.1.2 (package.json, src/index.ts,
+src/upstream.ts, server.json); server.json marks PANGOLINFO_API_KEY
+isRequired false, matching the new behavior.
+
+Tests: `npm test` 18/18 pass, including the new regression test
+"stdio server starts without an API key and fails live calls cleanly"
+(initialize returns serverInfo version 0.1.2, tools/list returns 5
+tools, get_product_reviews without a key returns isError with the
+missing-key message). No live backend call was made for this version;
+the MCPVault nightly re-run (key on file in its edit-page env vars)
+remains the live verification path.

@@ -17,6 +17,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { normalizeReview } from "./analysis.js";
+import { MockUpstreamClient } from "./mock.js";
 import type {
   ReviewFetchResult,
   UpstreamReview,
@@ -96,6 +97,41 @@ export function parseUpstreamResult(
   };
 }
 
+/** Client used when no API key is configured: the server still starts
+ *  (so initialize and tools/list succeed for keyless verifiers), and
+ *  only live data calls fail, with a clear message, until the key is set. */
+export class MissingKeyUpstreamClient implements UpstreamReviewsClient {
+  async fetchReviews(
+    _args: UpstreamReviewArgs,
+  ): Promise<ReviewFetchResult> {
+    throw new Error(
+      "PANGOLINFO_API_KEY is not set. Set it in the environment to fetch " +
+        "live reviews (or run with PANGOLINFO_REVIEW_MINING_MOCK=1 for " +
+        "mock mode).",
+    );
+  }
+}
+
+/** Build the review-data client from the environment. Never throws for a
+ *  missing key: without a key the server starts and serves initialize and
+ *  tools/list; only live tool calls fail until the key is set. */
+export function createUpstreamClient(): UpstreamReviewsClient {
+  if (process.env.PANGOLINFO_REVIEW_MINING_MOCK === "1") {
+    console.error("[review-mining-mcp] Mock mode: no network, mocked reviews.");
+    return new MockUpstreamClient();
+  }
+  const apiKey = process.env.PANGOLINFO_API_KEY;
+  if (!apiKey) {
+    console.error(
+      "[review-mining-mcp] Warning: PANGOLINFO_API_KEY is not set — " +
+        "server will start, but live review tools will fail until the key is set.",
+    );
+    return new MissingKeyUpstreamClient();
+  }
+  const url = process.env.PANGOLINFO_MCP_URL ?? DEFAULT_UPSTREAM_URL;
+  return new McpUpstreamClient(url, apiKey);
+}
+
 /** Live client: MCP bridge to the hosted Pangolinfo MCP server. */
 export class McpUpstreamClient implements UpstreamReviewsClient {
   private client: Client | null = null;
@@ -111,7 +147,7 @@ export class McpUpstreamClient implements UpstreamReviewsClient {
     if (!this.connecting) {
       this.connecting = (async () => {
         const client = new Client(
-          { name: "pangolinfo-review-mining-mcp", version: "0.1.1" },
+          { name: "pangolinfo-review-mining-mcp", version: "0.1.2" },
           { capabilities: {} },
         );
         const transport = new StreamableHTTPClientTransport(

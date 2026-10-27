@@ -9,7 +9,11 @@
  * over Streamable HTTP; all mining analysis runs locally.
  *
  * Configuration (environment only — never put a key in source):
- *   PANGOLINFO_API_KEY         Required in live mode. Bearer token for
+ *   PANGOLINFO_API_KEY         Needed for live tool calls, but NOT for
+ *                              startup: without it the server still starts
+ *                              and answers initialize and tools/list, and
+ *                              live tool calls fail with a clear message
+ *                              until the key is set. Bearer token for
  *                              the hosted Pangolinfo MCP server.
  *   PANGOLINFO_MCP_URL         Optional. Defaults to
  *                              https://mcp.pangolinfo.com/mcp
@@ -25,37 +29,15 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { MockUpstreamClient } from "./mock.js";
 import { TOOL_DEFS, handleTool } from "./tools.js";
-import type { UpstreamReviewsClient } from "./types.js";
-import {
-  DEFAULT_UPSTREAM_URL,
-  McpUpstreamClient,
-} from "./upstream.js";
+import { createUpstreamClient } from "./upstream.js";
 
 const MOCK_MODE = process.env.PANGOLINFO_REVIEW_MINING_MOCK === "1";
 
-function buildClient(): UpstreamReviewsClient {
-  if (MOCK_MODE) {
-    console.error("[review-mining-mcp] Mock mode: no network, mocked reviews.");
-    return new MockUpstreamClient();
-  }
-  const apiKey = process.env.PANGOLINFO_API_KEY;
-  if (!apiKey) {
-    throw new Error(
-      "PANGOLINFO_API_KEY is not set. Set it in the environment " +
-        "(never in source) or run with PANGOLINFO_REVIEW_MINING_MOCK=1 " +
-        "for mock mode.",
-    );
-  }
-  const url = process.env.PANGOLINFO_MCP_URL ?? DEFAULT_UPSTREAM_URL;
-  return new McpUpstreamClient(url, apiKey);
-}
-
 async function main(): Promise<void> {
-  const client = buildClient();
+  const client = createUpstreamClient();
   const server = new Server(
-    { name: "pangolinfo-review-mining-mcp", version: "0.1.1" },
+    { name: "pangolinfo-review-mining-mcp", version: "0.1.2" },
     { capabilities: { tools: {} } },
   );
 
