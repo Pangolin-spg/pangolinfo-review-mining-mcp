@@ -7,6 +7,9 @@ It mines what buyers complain about, how sentiment trends, and which
 complaint themes dominate — it does **not** duplicate the general
 Pangolinfo Amazon Data MCP.
 
+[Pangolinfo Amazon Review API](https://www.pangolinfo.com/amazon-review-api/)
+provides the Amazon review data used by this MCP.
+
 ## How it differs from the general Amazon Data MCP
 
 | | General Amazon Data MCP | This Review Mining MCP |
